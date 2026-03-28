@@ -9,8 +9,9 @@
 :root{
   --bg:#1a0a3a;--panel:#221155;--panel2:#2d1760;
   --gold:#ffd700;--green:#00e676;--red:#ff4444;
-  --ls:#f0d9b5;--ds:#b58863;
-  --font:'Comic Sans MS','Chalkboard SE','Segoe UI',cursive;
+  --ls:#ecdab0;--ds:#a06840;
+  --font:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'Courier New',Courier,monospace;
 }
 body{background:var(--bg);color:#fff;font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
 
@@ -53,33 +54,55 @@ body{background:var(--bg);color:#fff;font-family:var(--font);min-height:100vh;di
 .board-area{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
 .board-outer{display:flex;flex-direction:column;align-items:center;gap:2px}
 .board-row{display:flex;align-items:center;gap:2px}
-.coord{width:26px;height:62px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);font-weight:bold;flex-shrink:0}
-.coord.col{height:20px;width:62px}
-.board-wrapper{position:relative;display:inline-block}
-#board{display:grid;grid-template-columns:repeat(8,62px);grid-template-rows:repeat(8,62px);border:3px solid var(--gold);border-radius:4px;overflow:hidden}
-.sq{width:62px;height:62px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .1s;user-select:none}
-.sq.light{background:var(--ls)}
-.sq.dark{background:var(--ds)}
-.sq:hover{filter:brightness(1.12)}
+.coord{width:26px;height:66px;display:flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--font-mono);color:var(--gold);font-weight:bold;flex-shrink:0}
+.coord.col{height:20px;width:66px;font-family:var(--font-mono)}
+.board-wrapper{
+  position:relative;display:inline-block;
+  border-radius:6px;
+  box-shadow:
+    0 0 0 5px #6b3d1e,
+    0 0 0 9px #c8843a,
+    0 0 0 12px #6b3d1e,
+    0 10px 50px rgba(0,0,0,.9),
+    0 4px 20px rgba(200,132,58,.3);
+}
+#board{
+  display:grid;grid-template-columns:repeat(8,66px);grid-template-rows:repeat(8,66px);
+  border:none;border-radius:4px;overflow:hidden;
+}
+.sq{
+  width:66px;height:66px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;user-select:none;
+  transition:filter .12s;
+}
+.sq.light{background:radial-gradient(ellipse at 35% 30%,#f5e4be,#d9b87a)}
+.sq.dark{background:radial-gradient(ellipse at 65% 30%,#c07840,#7a4818)}
+.sq:hover{filter:brightness(1.18)}
+.sq.light:hover{background:radial-gradient(ellipse at 35% 30%,#fff3d4,#e8c878)}
+.sq.dark:hover{background:radial-gradient(ellipse at 65% 30%,#d08850,#9a5828)}
 
 /* Highlight overlays */
 .sq::after{content:'';position:absolute;inset:0;pointer-events:none;transition:all .15s}
-.sq.sel::after{background:rgba(255,237,74,.55)}
-.sq.vm::after{background:rgba(0,200,0,.18)}
-.sq.vm.empty-sq::after{content:'';width:22px;height:22px;border-radius:50%;background:rgba(0,200,0,.55);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);inset:unset}
-.sq.vc::after{inset:2px;border-radius:3px;border:4px solid rgba(255,80,80,.75);background:rgba(255,80,80,.15);position:absolute}
+.sq.sel::after{background:rgba(255,230,50,.6);box-shadow:inset 0 0 12px rgba(255,215,0,.5)}
+.sq.vm::after{background:rgba(0,200,0,.15)}
+.sq.vm.empty-sq::after{content:'';width:24px;height:24px;border-radius:50%;background:rgba(0,210,0,.6);box-shadow:0 0 8px rgba(0,255,0,.4);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);inset:unset}
+.sq.vc::after{inset:2px;border-radius:3px;border:4px solid rgba(255,80,80,.85);background:rgba(255,80,80,.18);position:absolute}
 .sq.hint{animation:hint-pulse 1s ease-in-out infinite}
 @keyframes hint-pulse{0%,100%{box-shadow:inset 0 0 0 4px rgba(74,144,226,.5)}50%{box-shadow:inset 0 0 0 7px rgba(74,144,226,.95)}}
 .sq.spotlight{z-index:5;animation:spotlight 1.6s ease-in-out infinite}
 @keyframes spotlight{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.8),inset 0 0 18px rgba(255,215,0,.25)}50%{box-shadow:0 0 22px 8px rgba(255,215,0,.5),inset 0 0 28px rgba(255,215,0,.45)}}
 .sq.check-sq{animation:check-flash .5s ease-in-out infinite}
-@keyframes check-flash{0%,100%{background:#ff3333}50%{background:#ff0000}}
+@keyframes check-flash{0%,100%{background:#cc2020}50%{background:#ff1010}}
 .board-dim{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:3;pointer-events:none;border-radius:2px;display:none}
 
 /* Pieces */
-.piece{font-size:46px;line-height:1;position:relative;z-index:2;cursor:pointer;filter:drop-shadow(1px 2px 2px rgba(0,0,0,.7));transition:transform .12s;pointer-events:none}
-.piece.w{color:#fffbef}
-.piece.b{color:#1a0800}
+.piece{
+  font-size:48px;line-height:1;position:relative;z-index:2;cursor:pointer;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.8)) drop-shadow(0 1px 2px rgba(0,0,0,.9));
+  transition:transform .12s,filter .12s;pointer-events:none;
+}
+.piece.w{color:#fff8e8;filter:drop-shadow(0 3px 5px rgba(0,0,0,.9)) drop-shadow(0 0 2px rgba(255,240,180,.4))}
+.piece.b{color:#0d0500;filter:drop-shadow(0 3px 5px rgba(0,0,0,.9)) drop-shadow(0 1px 0 rgba(255,255,255,.15))}
 
 /* Arrow SVG overlay */
 #arrow-svg{position:absolute;inset:0;pointer-events:none;z-index:10;width:100%;height:100%}
@@ -129,6 +152,43 @@ body{background:var(--bg);color:#fff;font-family:var(--font);min-height:100vh;di
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.05);border-radius:3px}
 ::-webkit-scrollbar-thumb{background:rgba(255,215,0,.4);border-radius:3px}
+
+/* Cell coordinate labels */
+.sq-coord{
+  position:absolute;bottom:2px;right:3px;
+  font-size:10px;font-family:'Courier New',Courier,monospace!important;
+  font-weight:700;pointer-events:none;z-index:20;line-height:1;
+  display:block;
+  padding:1px 3px;border-radius:3px;
+  letter-spacing:0;
+}
+.sq.light .sq-coord{color:#fff;background:rgba(80,40,10,.45)}
+.sq.dark .sq-coord{color:#fff;background:rgba(0,0,0,.35)}
+.coords-off .sq-coord{display:none}
+
+/* Voice picker */
+.voice-picker{
+  background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.3);
+  border-radius:20px;padding:5px 10px;font-family:var(--font);font-size:13px;
+  cursor:pointer;max-width:180px;outline:none;
+}
+.voice-picker:focus{border-color:var(--gold)}
+.voice-picker option{background:#221155;color:#fff}
+
+/* Ghost piece (pending move) */
+.piece.ghost{opacity:.42;filter:drop-shadow(0 0 6px rgba(255,215,0,.9))}
+.sq.pending-src::after{background:rgba(255,200,0,.28)}
+.sq.pending-dst::after{background:rgba(0,230,100,.22)}
+
+/* Confirm move button */
+.confirm-btn{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#00e676,#00b248);color:#111;border:none;border-radius:12px;padding:3px 9px;font-size:11px;font-weight:bold;cursor:pointer;z-index:25;white-space:nowrap;font-family:var(--font);box-shadow:0 2px 8px rgba(0,0,0,.55);transition:transform .1s,filter .1s}
+.confirm-btn:hover{transform:translateX(-50%) scale(1.12);filter:brightness(1.15)}
+
+/* Talk button */
+.btn-talk{background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.3);font-size:20px;padding:6px 12px}
+.btn-talk.listening{background:rgba(255,60,60,.3)!important;border-color:#ff4444!important;animation:pulse-mic .8s ease-in-out infinite}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(255,68,68,.5)}50%{box-shadow:0 0 0 8px rgba(255,68,68,0)}}
+.btn-coords-on{background:rgba(255,215,0,.25)!important;border-color:rgba(255,215,0,.7)!important}
 </style>
 </head>
 <body>
@@ -141,6 +201,9 @@ body{background:var(--bg);color:#fff;font-family:var(--font);min-height:100vh;di
     <div class="speech" id="hdr-speech">Hi there! I'm Knight the horse! Let's learn chess together! Click a lesson to start!</div>
   </div>
   <div class="hdr-btns">
+    <button class="btn btn-icon btn-talk" id="btn-talk" title="Talk to Agent">🎤</button>
+    <button class="btn btn-icon" id="btn-coords" title="Toggle Square Labels">🔢</button>
+    <select class="voice-picker" id="voice-picker" title="Choose voice"></select>
     <button class="btn btn-icon" id="btn-sound" title="Toggle Sound">🔊</button>
     <button class="btn btn-icon" id="btn-hint" title="Show Hint">💡</button>
     <button class="btn btn-gold" id="btn-reset">New Game</button>
@@ -175,7 +238,7 @@ body{background:var(--bg);color:#fff;font-family:var(--font);min-height:100vh;di
         <div class="board-wrapper" id="board-wrapper">
           <div id="board"></div>
           <div class="board-dim" id="board-dim"></div>
-          <svg id="arrow-svg" viewBox="0 0 496 496" preserveAspectRatio="none"></svg>
+          <svg id="arrow-svg" viewBox="0 0 528 528" preserveAspectRatio="none"></svg>
         </div>
       </div>
       <div class="board-row">
@@ -598,7 +661,9 @@ let G = {
   hintMv: null,
   soundOn: true,
   promoPending: null,
-  lessonChallengeDone: false
+  lessonChallengeDone: false,
+  pendingMove: null,
+  coordsVisible: true
 };
 
 // =====================================================
@@ -607,16 +672,77 @@ let G = {
 
 const synth = window.speechSynthesis;
 let speaking = false;
+let selectedVoice = null;
+
+function populateVoices(){
+  const voices = synth.getVoices();
+  if(!voices.length) return;
+  const sel = document.getElementById('voice-picker');
+  if(!sel) return;
+  sel.innerHTML = '';
+
+  // Sort: Indian voices first, then all others
+  const indian = voices.filter(v =>
+    v.lang.startsWith('en-IN') ||
+    v.name.toLowerCase().includes('india') ||
+    v.name.toLowerCase().includes('heera') ||
+    v.name.toLowerCase().includes('ravi') ||
+    v.name.toLowerCase().includes('hindi') ||
+    v.name.toLowerCase().includes('bengali') ||
+    v.lang.startsWith('hi-') ||
+    v.lang.startsWith('bn-') ||
+    v.lang.startsWith('ta-') ||
+    v.lang.startsWith('te-') ||
+    v.lang.startsWith('mr-') ||
+    v.lang.startsWith('gu-') ||
+    v.lang.startsWith('kn-') ||
+    v.lang.startsWith('ml-')
+  );
+  const others = voices.filter(v => !indian.includes(v));
+  const sorted = [...indian, ...others];
+
+  if(indian.length){
+    const grp = document.createElement('optgroup');
+    grp.label = '🇮🇳 Indian Voices';
+    indian.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = v.name + ' (' + v.lang + ')';
+      grp.appendChild(o);
+    });
+    sel.appendChild(grp);
+  }
+
+  const grp2 = document.createElement('optgroup');
+  grp2.label = '🌍 Other Voices';
+  others.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.name;
+    o.textContent = v.name + ' (' + v.lang + ')';
+    grp2.appendChild(o);
+  });
+  sel.appendChild(grp2);
+
+  // Default: prefer Indian en-IN, else first available
+  const preferred =
+    indian.find(v => v.lang === 'en-IN') ||
+    indian.find(v => v.lang.startsWith('en-IN')) ||
+    voices.find(v => v.name.includes('Samantha') || v.name.includes('Google UK English Female') || v.name.includes('Karen')) ||
+    voices[0];
+  if(preferred){ sel.value = preferred.name; selectedVoice = preferred; }
+
+  sel.onchange = () => {
+    selectedVoice = voices.find(v => v.name === sel.value) || null;
+    if(selectedVoice) speak('Hi! This is ' + selectedVoice.name + '!');
+  };
+}
 
 function speak(text){
   if(!G.soundOn)return;
   if(synth.speaking)synth.cancel();
   const u=new SpeechSynthesisUtterance(text);
   u.rate=0.92;u.pitch=1.1;u.volume=0.95;
-  // pick a friendly voice if available
-  const voices=synth.getVoices();
-  const nice=voices.find(v=>v.name.includes('Samantha')||v.name.includes('Google UK English Female')||v.name.includes('Karen'));
-  if(nice)u.voice=nice;
+  if(selectedVoice) u.voice=selectedVoice;
   synth.speak(u);
 }
 
@@ -685,7 +811,7 @@ function buildBoard(){
   });
   // Rank labels
   const ranks=document.getElementById('rank-labels');ranks.innerHTML='';
-  for(let r=0;r<8;r++){const d=document.createElement('div');d.className='coord';d.style.height='62px';d.style.width='26px';d.textContent=8-r;ranks.appendChild(d);}
+  for(let r=0;r<8;r++){const d=document.createElement('div');d.className='coord';d.style.height='66px';d.style.width='26px';d.textContent=8-r;ranks.appendChild(d);}
   // Squares
   for(let r=0;r<8;r++)for(let c=0;c<8;c++){
     const sq=document.createElement('div');
@@ -693,6 +819,11 @@ function buildBoard(){
     sq.className='sq '+(((r+c)%2===0)?'light':'dark');
     sq.dataset.r=r;sq.dataset.c=c;
     sq.addEventListener('click',()=>onSquareClick(r,c));
+    // Coordinate label
+    const coordLbl=document.createElement('span');
+    coordLbl.className='sq-coord';
+    coordLbl.textContent=FILES[c]+(8-r);
+    sq.appendChild(coordLbl);
     bd.appendChild(sq);
   }
 }
@@ -703,8 +834,8 @@ function renderBoard(){
     if(!sq)continue;
     // reset classes
     sq.className='sq '+(((r+c)%2===0)?'light':'dark');
-    // piece
-    sq.innerHTML='';
+    // piece — clear only non-coord children
+    Array.from(sq.children).forEach(ch=>{if(!ch.classList.contains('sq-coord'))ch.remove();});
     const p=G.board[r][c];
     if(p){
       const span=document.createElement('span');
@@ -748,6 +879,35 @@ function renderBoard(){
       }
     }
   }
+  // Pending move ghost + confirm button
+  if(G.pendingMove){
+    const{fr,fc,tr,tc}=G.pendingMove;
+    const srcSq=document.getElementById(sqId(fr,fc));
+    const dstSq=document.getElementById(sqId(tr,tc));
+    if(srcSq){
+      srcSq.classList.add('pending-src');
+      const pe=srcSq.querySelector('.piece');
+      if(pe)pe.classList.add('ghost');
+    }
+    if(dstSq){
+      dstSq.classList.add('pending-dst');
+      const p=G.board[fr][fc];
+      if(p){
+        const gs=document.createElement('span');
+        gs.className='piece ghost '+(isW(p)?'w':'b');
+        gs.textContent=SYMS[p];
+        gs.style.position='absolute';
+        gs.style.zIndex='15';
+        dstSq.appendChild(gs);
+      }
+      const cb=document.createElement('button');
+      cb.className='confirm-btn';
+      cb.textContent='✓ Move?';
+      cb.title='Confirm this move';
+      cb.addEventListener('click',e=>{e.stopPropagation();confirmMove();});
+      dstSq.appendChild(cb);
+    }
+  }
   // Arrow hint
   renderArrow();
   // Turn indicator
@@ -784,7 +944,7 @@ function renderArrow(){
   const svg=document.getElementById('arrow-svg');svg.innerHTML='';
   if(!G.hintMv)return;
   const {fr,fc,r,c}=G.hintMv;
-  const sq=62;
+  const sq=66;
   const x1=fc*sq+sq/2,y1=fr*sq+sq/2,x2=c*sq+sq/2,y2=r*sq+sq/2;
   const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
   if(len<1)return;
@@ -930,12 +1090,21 @@ function onSquareClick(r,c){
   if(G.over&&G.mode!=='lesson')return;
   if(G.promoPending)return;
   const p=G.board[r][c];
+  // Pending move: any square click cancels and evaluates the pending move
+  if(G.pendingMove){
+    const pm=G.pendingMove;
+    G.pendingMove=null;
+    G.sel=null;G.moves=[];
+    doEvaluateMove(pm.fr,pm.fc,pm.tr,pm.tc,pm.sp);
+    if(p&&col(p)===G.turn){selectPiece(r,c);}
+    else{renderBoard();}
+    return;
+  }
   // If something is selected - try to move
   if(G.sel){
     const mv=G.moves.find(m=>m.r===r&&m.c===c);
     if(mv){
-      executeMove(G.sel.r,G.sel.c,r,c,mv.sp);
-      G.sel=null;G.moves=[];
+      showPendingMove(G.sel.r,G.sel.c,r,c,mv.sp);
       return;
     }
     // click on own piece - reselect
@@ -967,6 +1136,122 @@ function selectPiece(r,c){
     G.stepIdx=Math.min(G.stepIdx+1,LESSONS[G.lesson].steps.length-1);
     updateInfoPanel();
   }
+}
+
+// =====================================================
+// PENDING MOVE CONFIRMATION
+// =====================================================
+
+function showPendingMove(fr,fc,tr,tc,sp){
+  G.pendingMove={fr,fc,tr,tc,sp};
+  G.sel=null;G.moves=[];
+  renderBoard();
+  const p=G.board[fr][fc];
+  const pName=NAMES[p.toUpperCase()]||p;
+  document.getElementById('hdr-speech').textContent=
+    `${pName} to ${toAlg(tr,tc)} — tap ✓ to confirm, or click elsewhere to evaluate!`;
+}
+
+function confirmMove(){
+  if(!G.pendingMove)return;
+  const{fr,fc,tr,tc,sp}=G.pendingMove;
+  G.pendingMove=null;
+  executeMove(fr,fc,tr,tc,sp);
+}
+
+function doEvaluateMove(fr,fc,tr,tc,sp){
+  const p=G.board[fr][fc];
+  if(!p)return;
+  const pName=NAMES[p.toUpperCase()]||p;
+  const threat=opponentThreat(fr,fc,tr,tc,sp||null);
+  let text=`${pName} from ${toAlg(fr,fc)} to ${toAlg(tr,tc)}: ${threat.msg}`;
+  speak(text);
+  document.getElementById('hdr-speech').textContent=text.substring(0,140);
+  // Show arrow hint for the evaluated move
+  G.hintMv={fr,fc,r:tr,c:tc};
+}
+
+// =====================================================
+// TALK TO AGENT (Speech Recognition)
+// =====================================================
+
+let _rec=null,_listening=false;
+
+function initSpeechRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  const r=new SR();
+  r.continuous=false;r.interimResults=false;r.lang='en-US';
+  r.onresult=e=>{
+    const txt=e.results[0][0].transcript.toLowerCase();
+    _stopListen();
+    handleVoiceInput(txt);
+  };
+  r.onerror=()=>{_stopListen();speak('Sorry, I could not hear that. Try again!');};
+  r.onend=()=>{_stopListen();};
+  return r;
+}
+
+function toggleTalk(){
+  if(_listening){_stopListen();return;}
+  if(!_rec)_rec=initSpeechRec();
+  if(!_rec){speak('Voice input needs Chrome or Edge browser!');return;}
+  _listening=true;
+  document.getElementById('btn-talk').classList.add('listening');
+  document.getElementById('hdr-speech').textContent='Listening... say a move like "e2 to e4" or ask for a hint!';
+  try{_rec.start();}catch(e){_stopListen();}
+}
+
+function _stopListen(){
+  _listening=false;
+  const b=document.getElementById('btn-talk');
+  if(b)b.classList.remove('listening');
+  try{if(_rec)_rec.stop();}catch(e){}
+}
+
+function handleVoiceInput(text){
+  document.getElementById('hdr-speech').textContent='You said: "'+text+'"';
+  const squares=text.match(/[a-h]\s*[1-8]/gi);
+  const clean=squares?squares.map(s=>s.replace(/\s/,'')):[];
+  if(clean.length>=2){
+    evalVoiceMove(clean[0].toLowerCase(),clean[1].toLowerCase());
+  } else if(clean.length===1){
+    evalVoiceDest(clean[0].toLowerCase());
+  } else if(/hint|help|what should|suggest|best/.test(text)){
+    showHint();
+  } else if(/reset|new game|restart/.test(text)){
+    document.getElementById('btn-reset').click();
+  } else {
+    speak('I heard: '+text+'. Try saying a move like "e2 to e4" or ask for a hint!');
+  }
+}
+
+function algToRC(alg){return{r:8-parseInt(alg[1]),c:alg.charCodeAt(0)-97};}
+
+function evalVoiceMove(from,to){
+  const src=algToRC(from),dst=algToRC(to);
+  const p=G.board[src.r][src.c];
+  if(!p){speak('No piece on '+from+'!');return;}
+  if(col(p)!==G.turn){speak('That is the opponent\'s piece on '+from+'!');return;}
+  const mvs=legalMoves(G.board,src.r,src.c,G.ep,G.cas);
+  const mv=mvs.find(m=>m.r===dst.r&&m.c===dst.c);
+  if(!mv){speak(NAMES[p.toUpperCase()]+' cannot move from '+from+' to '+to+'. Not a legal move!');return;}
+  const pName=NAMES[p.toUpperCase()]||p;
+  const threat=opponentThreat(src.r,src.c,dst.r,dst.c,mv.sp||null);
+  const text=`Moving the ${pName} from ${from} to ${to} — ${threat.msg}`;
+  speak(text);
+  document.getElementById('hdr-speech').textContent=text;
+  G.sel=src;G.moves=mvs;G.hintMv={fr:src.r,fc:src.c,r:dst.r,c:dst.c};
+  renderBoard();
+}
+
+function evalVoiceDest(to){
+  const dst=algToRC(to);
+  const all=allLegal(G.board,G.turn,G.ep,G.cas).filter(m=>m.r===dst.r&&m.c===dst.c);
+  if(!all.length){speak('No piece can move to '+to+' right now!');return;}
+  if(all.length===1){evalVoiceMove(toAlg(all[0].fr,all[0].fc),to);return;}
+  const opts=all.map(m=>(NAMES[(G.board[m.fr][m.fc]||'').toUpperCase()]||'piece')+' from '+toAlg(m.fr,m.fc));
+  speak('Multiple pieces can go to '+to+': '+opts.join(', ')+'. Which one?');
 }
 
 function executeMove(fr,fc,tr,tc,sp){
@@ -1170,6 +1455,17 @@ function init(){
     t.addEventListener('click',()=>setMode(t.dataset.mode));
   });
 
+  // Talk to agent
+  document.getElementById('btn-talk').addEventListener('click',toggleTalk);
+
+  // Coords toggle
+  document.getElementById('btn-coords').classList.add('btn-coords-on');
+  document.getElementById('btn-coords').addEventListener('click',()=>{
+    G.coordsVisible=!G.coordsVisible;
+    document.getElementById('board').classList.toggle('coords-off',!G.coordsVisible);
+    document.getElementById('btn-coords').classList.toggle('btn-coords-on',G.coordsVisible);
+  });
+
   // Sound toggle
   document.getElementById('btn-sound').addEventListener('click',()=>{
     G.soundOn=!G.soundOn;
@@ -1219,8 +1515,9 @@ function init(){
     document.getElementById('celebration').classList.remove('on');
   });
 
-  // Load voices
-  if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=()=>{};
+  // Load voices — Chrome loads async, so try immediately then on event
+  populateVoices();
+  if(synth.onvoiceschanged !== undefined) synth.onvoiceschanged = populateVoices;
 
   // Start with first lesson auto-highlighted
   speak('Welcome to Chess Adventure! I am Knight the horse! Click on Lesson 1 to start! Let\'s learn chess together!');
